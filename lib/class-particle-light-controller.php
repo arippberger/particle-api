@@ -101,11 +101,22 @@ class Particle_Light_Controller extends WP_REST_Controller implements Particle_T
 	 */
 	public function update_item( $request ) {
 		//$item = $this->prepare_item_for_database( $request );
+		$params  = $request->get_params();
+		$color   = $params[ 0 ];
 
-		$params = $request->get_params();
+		if ( ! array_key_exists( $color, self::$lights ) ) {
+			return new WP_Error( 'cant-update', __( 'message', 'particle-api' ), array( 'status' => 500 ) );
+		}
 
-		$data = (array) update_option( self::$lights[ $params[ 0 ], (bool) $params[ 1 ] );
-		if ( is_array( $data ) ) {
+		$json    = json_decode( $request->get_body() );
+		$status  = isset( $json->status ) ? $json->status : null;
+		$data    = new stdClass();
+
+		update_option( self::$lights[ $params[ 0 ] ], $status );
+
+		$data->status = $status;
+
+		if ( is_object( $data ) ) {
 			return new WP_REST_Response( $data, 200 );
 		}
 
@@ -120,8 +131,10 @@ class Particle_Light_Controller extends WP_REST_Controller implements Particle_T
 	 * @return WP_Error|bool
 	 */
 	public function get_items_permissions_check( $request ) {
-		return true; //<--use to make readable by all
-		return current_user_can( 'edit_something' );
+		//$current_user_can = current_user_can( 'edit_posts' );
+		$current_user_can = true; // everyone should be able to read
+		return $current_user_can;
+
 	}
 
 	/**
@@ -143,7 +156,8 @@ class Particle_Light_Controller extends WP_REST_Controller implements Particle_T
 	 * @return WP_Error|bool
 	 */
 	public function update_item_permissions_check( $request ) {
-		return current_user_can( 'edit_something' );
+		$current_user_can = current_user_can( 'edit_posts' );
+		return $current_user_can;
 	}
 
 	/**
