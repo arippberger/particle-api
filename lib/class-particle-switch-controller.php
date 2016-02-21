@@ -2,6 +2,12 @@
 
 class Particle_Switch_Controller extends WP_REST_Controller implements Particle_Thing_Controllable {
 
+	public static $switches = array(
+		1 => 'particle_switch_one',
+		2 => 'particle_switch_two',
+		3 => 'particle_switch_three',
+	);
+
 	/**
 	 * Register the routes for the objects of the controller.
 	 */
@@ -17,7 +23,7 @@ class Particle_Switch_Controller extends WP_REST_Controller implements Particle_
 				'args'                => array(),
 			),
 		) );
-		register_rest_route( $namespace, '/' . $base . '/(?P<id>[\d]+)', array(
+		register_rest_route( $namespace, '/' . $base . '/(?P<id>\d+)', array(
 			array(
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => array( $this, 'get_item' ),
@@ -27,12 +33,6 @@ class Particle_Switch_Controller extends WP_REST_Controller implements Particle_
 						'default' => 'view',
 					),
 				),
-			),
-			array(
-				'methods'             => WP_REST_Server::EDITABLE,
-				'callback'            => array( $this, 'update_item' ),
-				'permission_callback' => array( $this, 'update_item_permissions_check' ),
-				'args'                => $this->get_endpoint_args_for_item_schema( false ),
 			),
 		) );
 		register_rest_route( $namespace, '/' . $base . '/schema', array(
@@ -49,11 +49,19 @@ class Particle_Switch_Controller extends WP_REST_Controller implements Particle_
 	 * @return WP_Error|WP_REST_Response
 	 */
 	public function get_items( $request ) {
-		$switches = array(); //do a query, call another class, etc
-		$data    = array();
-		foreach ( $switches as $switch ) {
-			$switch_data = $this->prepare_item_for_response( $switch, $request );
-			$data[]      = $this->prepare_response_for_collection( $switch_data );
+
+		$switches = array();
+		$data = array();
+
+		foreach( self::$switches as $key => $switch ) {
+			$switches[ $key ] = get_option( $switch );
+		}
+
+		foreach ( $switches as $key => $switch ) {
+			$object = new stdClass();
+			$switch_data   = $this->prepare_item_for_response( $switch, $request );
+			$object->status = $this->prepare_response_for_collection( $switch_data );
+			$data[ $key ] = $object;
 		}
 
 		return new WP_REST_Response( $data, 200 );
@@ -69,36 +77,16 @@ class Particle_Switch_Controller extends WP_REST_Controller implements Particle_
 	public function get_item( $request ) {
 		//get parameters from request
 		$params = $request->get_params();
-		$switch = array();//do a query, call another class, etc
-		$data   = $this->prepare_item_for_response( $switch, $request );
+		$object = new stdClass();
+		$switch  = get_option( self::$switches[ $params[ 0 ] ] );
+		$object->status = $this->prepare_item_for_response( $switch, $request );
 
 		//return a response or error based on some conditional
 		if ( 1 == 1 ) {
-			return new WP_REST_Response( $data, 200 );
+			return new WP_REST_Response( $object, 200 );
 		} else {
 			return new WP_Error( 'code', __( 'message', 'particle-api' ) );
 		}
-	}
-
-	/**
-	 * Update one item from the collection
-	 *
-	 * @param WP_REST_Request $request Full data about the request.
-	 *
-	 * @return WP_Error|WP_REST_Request
-	 */
-	public function update_item( $request ) {
-		$item = $this->prepare_item_for_database( $request );
-
-		if ( function_exists( 'slug_some_function_to_update_item' ) ) {
-			$data = slug_some_function_to_update_item( $item );
-			if ( is_array( $data ) ) {
-				return new WP_REST_Response( $data, 200 );
-			}
-		}
-
-		return new WP_Error( 'cant-update', __( 'message', 'particle-api' ), array( 'status' => 500 ) );
-
 	}
 
 	/**
@@ -109,8 +97,9 @@ class Particle_Switch_Controller extends WP_REST_Controller implements Particle_
 	 * @return WP_Error|bool
 	 */
 	public function get_items_permissions_check( $request ) {
-		//return true; <--use to make readable by all
-		return current_user_can( 'edit_something' );
+		//$current_user_can = current_user_can( 'edit_posts' );
+		$current_user_can = true; // everyone should be able to read
+		return $current_user_can;
 	}
 
 	/**
@@ -132,7 +121,8 @@ class Particle_Switch_Controller extends WP_REST_Controller implements Particle_
 	 * @return WP_Error|bool
 	 */
 	public function update_item_permissions_check( $request ) {
-		return current_user_can( 'edit_something' );
+		$current_user_can = current_user_can( 'edit_posts' );
+		return $current_user_can;
 	}
 
 	/**
@@ -155,7 +145,7 @@ class Particle_Switch_Controller extends WP_REST_Controller implements Particle_
 	 * @return mixed
 	 */
 	public function prepare_item_for_response( $item, $request ) {
-		return array();
+		return  $item;
 	}
 
 	/**

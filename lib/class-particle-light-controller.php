@@ -63,8 +63,10 @@ class Particle_Light_Controller extends WP_REST_Controller implements Particle_T
 		}
 
 		foreach ( $lights as $key => $light ) {
+			$object = new stdClass();
 			$light_data   = $this->prepare_item_for_response( $light, $request );
-			$data[ $key ] = $this->prepare_response_for_collection( $light_data );
+			$object->status = $this->prepare_response_for_collection( $light_data );
+			$data[ $key ] = $object;
 		}
 
 		return new WP_REST_Response( $data, 200 );
@@ -78,15 +80,15 @@ class Particle_Light_Controller extends WP_REST_Controller implements Particle_T
 	 * @return WP_Error|WP_REST_Response
 	 */
 	public function get_item( $request ) {
-		$data = array();
 		//get parameters from request
 		$params = $request->get_params();
+		$object = new stdClass();
 		$light  = get_option( self::$lights[ $params[ 0 ] ] );
-		$data[] = $this->prepare_item_for_response( $light, $request );
+		$object->status = $this->prepare_item_for_response( $light, $request );
 
 		//return a response or error based on some conditional
 		if ( 1 == 1 ) {
-			return new WP_REST_Response( $data, 200 );
+			return new WP_REST_Response( $object, 200 );
 		} else {
 			return new WP_Error( 'code', __( 'message', 'particle-api' ) );
 		}
