@@ -13,27 +13,31 @@
 
 class Particle_API {
 
-	public static $options = array(
-		'particle_light_red',
-		'particle_light_green',
-		'particle_switch_one',
-		'particle_switch_two',
-		'particle_switch_three'
-	);
-
 	public function __construct() {
-
+		$this->include_files();
 	}
 
 	public function run() {
-		add_action( 'plugins_loaded', array( $this, 'include_files' ) );
+		add_action( 'plugins_loaded', array( $this, 'include_api_files' ) );
 		add_action( 'rest_api_init', array( $this, 'register_routes' ) );
+
+		new Particle_Settings();
 	}
 
-	public function include_files() {
+	/**
+	 * Include files that depend on WordPress API
+	 */
+	public function include_api_files() {
 		include plugin_dir_path( __FILE__ ) . "lib/interface-particle-thing-controllable.php";
 		include plugin_dir_path( __FILE__ ) . "lib/class-particle-light-controller.php";
 		include plugin_dir_path( __FILE__ ) . "lib/class-particle-switch-controller.php";
+	}
+
+	/**
+	 * Include other plugin files
+	 */
+	private function include_files() {
+		include plugin_dir_path( __FILE__ ) . "lib/class-particle-settings.php";
 	}
 
 	public function register_routes() {
@@ -43,25 +47,18 @@ class Particle_API {
 		$particle_switch_controller->register_routes();
 	}
 
-	public static function activation() {
-
-		foreach ( self::$options as $option ) {
-			add_option( $option, false );
-		}
+	public function activation() {
+		Particle_Settings::add_options();
 	}
 
-	public static function deactivation() {
-
-		foreach ( self::$options as $option ) {
-			delete_option( $option );
-		}
+	public function deactivation() {
+		Particle_Settings::delete_options();
 	}
 }
 
-register_activation_hook( __FILE__, array( 'Particle_API', 'activation' ) );
-register_deactivation_hook( __FILE__, array( 'Particle_API', 'deactivation' ) );
-
 $particle_api = new Particle_API();
+register_activation_hook( __FILE__, array( $particle_api, 'activation' ) );
+register_deactivation_hook( __FILE__, array( $particle_api, 'deactivation' ) );
 $particle_api->run();
 
 
