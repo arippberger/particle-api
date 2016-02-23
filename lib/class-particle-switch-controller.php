@@ -115,7 +115,7 @@ class Particle_Switch_Controller extends WP_REST_Controller implements Particle_
 		$status  = isset( $json->status ) ? $json->status : null;
 		$data    = new stdClass();
 
-		update_option( $id, $status );
+		update_option( self::$switches[ $id ], $status );
 
 		$data->status = $status;
 
