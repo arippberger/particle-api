@@ -47,22 +47,26 @@ class Particle_Settings {
 		$this->add_settings_field_to_section( $options );
 	}
 
-	private function add_settings_field_to_section( $options, $section = null ) {
+	private function add_settings_field_to_section( $options, $passed_section = null ) {
 
+		$section = null;
 		foreach ( $options as $key => $option ) {
 
 			// if no section has been passed add to setting to the section based on the beginning of its name.
-			if ( empty( $section ) ) {
+			if ( empty( $passed_section ) ) {
 				$start_of_key = substr( $key, 0, 14 );
 
 				switch ( $start_of_key ) {
 					case 'particle_light' :
 						$section = 'particle_light_setting_section';
+
 						break;
 					case 'particle_switc' :
 						$section = 'particle_switch_setting_section';
 						break;
 				}
+			} else {
+				$section = $passed_section;
 			}
 
 			// Add the field
