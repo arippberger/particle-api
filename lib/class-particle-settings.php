@@ -25,9 +25,16 @@ class Particle_Settings {
 		// Add the section to reading settings so we can add our
 		// fields to it
 		add_settings_section(
-			'particle_api_setting_section',
-			__( 'Particle API Settings', 'particle-api' ),
-			array( $this, 'setting_section_callback_function' ),
+			'particle_light_setting_section',
+			__( 'Particle API LED Settings', 'particle-api' ),
+			array( $this, 'light_setting_section_callback_function' ),
+			'reading'
+		);
+
+		add_settings_section(
+			'particle_switch_setting_section',
+			__( 'Particle API Switch Settings', 'particle-api' ),
+			array( $this, 'switch_setting_section_callback_function' ),
 			'reading'
 		);
 
@@ -36,16 +43,35 @@ class Particle_Settings {
 	} // settings_api_init()
 
 	private function add_register_settings() {
+		$options = Particle_Settings::get_options();
+		$this->add_settings_field_to_section( $options );
+	}
 
-		foreach ( Particle_Settings::get_options() as $key => $option ) {
-			// Add the field with the names and function to use for our new
-			// settings, put it in our new section
+	private function add_settings_field_to_section( $options, $section = null ) {
+
+		foreach ( $options as $key => $option ) {
+
+			// if no section has been passed add to setting to the section based on the beginning of its name.
+			if ( empty( $section ) ) {
+				$start_of_key = substr( $key, 0, 14 );
+
+				switch ( $start_of_key ) {
+					case 'particle_light' :
+						$section = 'particle_light_setting_section';
+						break;
+					case 'particle_switc' :
+						$section = 'particle_switch_setting_section';
+						break;
+				}
+			}
+
+			// Add the field
 			add_settings_field(
 				$key,
 				$option,
 				array( $this, "{$key}_callback_function" ),
 				'reading',
-				'particle_api_setting_section'
+				$section
 			);
 
 			// Register our setting so that $_POST handling is done for us and
@@ -58,8 +84,21 @@ class Particle_Settings {
 	/**
 	 * Settings section callback function
 	 */
-	public function setting_section_callback_function() {
-		echo '<p>' . __( 'Example Settings', 'particle-api' ) . '</p>';
+	public function light_setting_section_callback_function() {
+		echo '<p>' . __( 'Settings for the board LED lights.
+						Updating a setting here will either cause the LED to turn on or off.
+						However, there is no way to update these settings from the board.
+						Settings -> board relationship.', 'particle-api' ) . '</p>';
+	}
+
+	/**
+	 * Settings section callback function
+	 */
+	public function switch_setting_section_callback_function() {
+		echo '<p>' . __( 'Settings for the board switches.
+						Switching a switch will cause the settings shown here to update on refresh.
+						However, updating a setting here will not cause the switch to update.
+						Board -> settings relationship.', 'particle-api' ) . '</p>';
 	}
 
 	/**
