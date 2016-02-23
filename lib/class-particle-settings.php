@@ -68,8 +68,10 @@ class Particle_Settings {
 	 */
 	private function setting_callback_function( $key ) {
 		$option = '' === get_option( $key ) ? 'false' : get_option( $key ); ?>
-		<input type="radio" name="<?php esc_attr_e( $key ); ?>" value="true" <?php checked( 'true' === $option ); ?> />
-		<input type="radio" name="<?php esc_attr_e( $key ); ?>" value="false" <?php checked( 'false' === $option ); ?> /><?php
+		<label for="<?php esc_attr_e( $key ); ?>-true"><?php _e( 'True', 'particle-api' ); ?></label>
+		<input type="radio" id="<?php esc_attr_e( $key ); ?>-true" name="<?php esc_attr_e( $key ); ?>" value="true" <?php checked( 'true' === $option ); ?> />
+		<label for="<?php esc_attr_e( $key ); ?>-false"><?php _e( 'False', 'particle-api' ); ?></label>
+		<input type="radio" id="<?php esc_attr_e( $key ); ?>-false" name="<?php esc_attr_e( $key ); ?>" value="false" <?php checked( 'false' === $option ); ?> /><?php
 	}
 
 	public function particle_light_red_callback_function() {
