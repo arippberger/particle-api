@@ -114,7 +114,7 @@ class Particle_Light_Controller extends WP_REST_Controller implements Particle_T
 		$status  = isset( $json->status ) ? $json->status : null;
 		$data    = new stdClass();
 
-		update_option( self::$lights[ $params[ 0 ] ], $status );
+		update_option( self::$lights[ $color ], $status );
 
 		$data->status = $status;
 

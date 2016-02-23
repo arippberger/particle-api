@@ -34,6 +34,12 @@ class Particle_Switch_Controller extends WP_REST_Controller implements Particle_
 					),
 				),
 			),
+			array(
+				'methods'             => WP_REST_Server::EDITABLE,
+				'callback'            => array( $this, 'update_item' ),
+				'permission_callback' => array( $this, 'update_item_permissions_check' ),
+				'args'                => $this->get_endpoint_args_for_item_schema( false ),
+			),
 		) );
 		register_rest_route( $namespace, '/' . $base . '/schema', array(
 			'methods'  => WP_REST_Server::READABLE,
@@ -87,6 +93,37 @@ class Particle_Switch_Controller extends WP_REST_Controller implements Particle_
 		} else {
 			return new WP_Error( 'code', __( 'message', 'particle-api' ) );
 		}
+	}
+
+	/**
+	 * Update one item from the collection
+	 *
+	 * @param WP_REST_Request $request Full data about the request.
+	 *
+	 * @return WP_Error|WP_REST_Request
+	 */
+	public function update_item( $request ) {
+		//$item = $this->prepare_item_for_database( $request );
+		$params  = $request->get_params();
+		$id   = intval( $params[ 0 ] );
+
+		if ( ! array_key_exists( $id, self::$switches ) ) {
+			return new WP_Error( 'cant-update', __( 'message', 'particle-api' ), array( 'status' => 500 ) );
+		}
+
+		$json    = json_decode( $request->get_body() );
+		$status  = isset( $json->status ) ? $json->status : null;
+		$data    = new stdClass();
+
+		update_option( $id, $status );
+
+		$data->status = $status;
+
+		if ( is_object( $data ) ) {
+			return new WP_REST_Response( $data, 200 );
+		}
+
+		return new WP_Error( 'cant-update', __( 'message', 'particle-api' ), array( 'status' => 500 ) );
 	}
 
 	/**

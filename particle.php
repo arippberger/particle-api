@@ -41,10 +41,14 @@ class Particle_API {
 	}
 
 	public function register_routes() {
-		$particle_light_controller = new Particle_Light_Controller();
-		$particle_light_controller->register_routes();
-		$particle_switch_controller = new Particle_Switch_Controller();
-		$particle_switch_controller->register_routes();
+		//pre 5.4 syntax
+//		$particle_light_controller = new Particle_Light_Controller();
+//		$particle_light_controller->register_routes();
+//		$particle_switch_controller = new Particle_Switch_Controller();
+//		$particle_switch_controller->register_routes();
+
+		( new Particle_Light_Controller() )->register_routes();
+		( new Particle_Switch_Controller() )->register_routes();
 	}
 
 	public function activation() {
