@@ -1,5 +1,7 @@
 <?php
 
+namespace ParticleAPI;
+
 interface Particle_Thing_Controllable {
 	public function register_routes();
 	public function get_items( $request );
