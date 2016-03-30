@@ -1,6 +1,20 @@
-class HelloMessage extends React.Component {
+import React from "react";
+import ReactDOM from "react-dom";
+import SwitchStatus from "./switches";
+import LEDStatus from "./leds.js";
+
+class ParticleAPI extends React.Component {
     render() {
-        return <div>Hello {this.props.name} </div>
+        return (
+            <div>
+                <SwitchStatus />
+                <LEDStatus />
+            </div>
+        );
     }
 }
-ReactDOM.render(<HelloMessage name="Alec" />, document.getElementsByClassName('particle-api-shortcode') );
+
+ReactDOM.render(
+    <ParticleAPI />,
+    document.getElementById('particle-api-shortcode')
+);
