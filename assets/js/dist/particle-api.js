@@ -19745,13 +19745,11 @@
 	        key: 'componentDidMount',
 	        value: function componentDidMount() {
 	            this.serverRequest = $.get('http://particle-api.alecrippberger.com/wp-json/particle-api/v1/switch', function (result) {
-	                console.log('result:');
-	                console.log(result);
 
 	                this.setState({
-	                    switchOneStatus: '',
-	                    switchTwoStatus: '',
-	                    switchThreeStatus: ''
+	                    switchOneStatus: result[Object.keys(result)[0]].status,
+	                    switchTwoStatus: result[Object.keys(result)[1]].status,
+	                    switchThreeStatus: result[Object.keys(result)[2]].status
 	                });
 	            }.bind(this));
 	        }
@@ -19761,8 +19759,15 @@
 	            this.serverRequest.abort();
 	        }
 	    }, {
+	        key: 'onChange',
+	        value: function onChange(event) {
+	            this.setState({ status: event.target.checked });
+	            this.props.onChange(event);
+	        }
+	    }, {
 	        key: 'render',
 	        value: function render() {
+
 	            return _react2.default.createElement(
 	                'div',
 	                null,
@@ -19770,6 +19775,43 @@
 	                    'h2',
 	                    null,
 	                    'Switch Status'
+	                ),
+	                _react2.default.createElement(
+	                    'ul',
+	                    null,
+	                    _react2.default.createElement(
+	                        'li',
+	                        null,
+	                        _react2.default.createElement(
+	                            'strong',
+	                            null,
+	                            'Switch One Status:'
+	                        ),
+	                        ' ',
+	                        this.state.switchOneStatus
+	                    ),
+	                    _react2.default.createElement(
+	                        'li',
+	                        null,
+	                        _react2.default.createElement(
+	                            'strong',
+	                            null,
+	                            'Switch Two Status:'
+	                        ),
+	                        ' ',
+	                        this.state.switchTwoStatus
+	                    ),
+	                    _react2.default.createElement(
+	                        'li',
+	                        null,
+	                        _react2.default.createElement(
+	                            'strong',
+	                            null,
+	                            'Switch Three Status:'
+	                        ),
+	                        ' ',
+	                        this.state.switchThreeStatus
+	                    )
 	                )
 	            );
 	        }
@@ -29632,7 +29674,7 @@
 /* 161 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
@@ -29652,36 +29694,122 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	console.log('led');
+	var $ = __webpack_require__(160);
 
-	var LEDStatus = function (_React$Component) {
-	    _inherits(LEDStatus, _React$Component);
+	var SwitchStatus = function (_React$Component) {
+	    _inherits(SwitchStatus, _React$Component);
 
-	    function LEDStatus() {
-	        _classCallCheck(this, LEDStatus);
+	    function SwitchStatus() {
+	        _classCallCheck(this, SwitchStatus);
 
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(LEDStatus).apply(this, arguments));
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(SwitchStatus).call(this));
+
+	        _this.state = {
+	            redLEDStatus: false,
+	            greenLEDStatus: false
+	        };
+
+	        _this.makeCheckedLink = _this.makeCheckedLink.bind(_this);
+	        _this.updateLEDStatus = _this.updateLEDStatus.bind(_this);
+
+	        return _this;
 	    }
 
-	    _createClass(LEDStatus, [{
-	        key: "render",
+	    _createClass(SwitchStatus, [{
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            this.serverRequest = $.get('http://particle-api.alecrippberger.com/wp-json/particle-api/v1/light', function (result) {
+
+	                this.setState({
+	                    redLEDStatus: result[Object.keys(result)[0]].status == 'true',
+	                    greenLEDStatus: result[Object.keys(result)[1]].status == 'true'
+	                });
+	            }.bind(this));
+	        }
+	    }, {
+	        key: 'componentWillUnmount',
+	        value: function componentWillUnmount() {
+	            this.serverRequest.abort();
+	        }
+	    }, {
+	        key: 'makeCheckedLink',
+	        value: function makeCheckedLink(key) {
+
+	            return {
+	                value: this.state[key],
+	                requestChange: function requestChange(newValue) {
+	                    var newState = {};
+	                    newState[key] = newValue;
+	                    this.state = newState;
+	                }
+	            };
+	        }
+	    }, {
+	        key: 'updateLEDStatus',
+	        value: function updateLEDStatus(e) {
+	            var color = e.target.dataset.color;
+	            this.serverRequest = $.post('http://particle-api.alecrippberger.com/wp-json/particle-api/v1/light/' + color, function (result) {
+
+	                console.log(result);
+
+	                this.setState({
+	                    redLEDStatus: result[Object.keys(result)[0]].status == 'true',
+	                    greenLEDStatus: result[Object.keys(result)[1]].status == 'true'
+	                });
+	            }.bind(this));
+	        }
+	    }, {
+	        key: 'render',
 	        value: function render() {
+
 	            return _react2.default.createElement(
-	                "div",
+	                'div',
 	                null,
 	                _react2.default.createElement(
-	                    "h2",
+	                    'h2',
 	                    null,
-	                    "LED Status"
+	                    'LED Status'
+	                ),
+	                _react2.default.createElement(
+	                    'ul',
+	                    null,
+	                    _react2.default.createElement(
+	                        'li',
+	                        null,
+	                        _react2.default.createElement(
+	                            'label',
+	                            { htmlFor: 'red-led-on' },
+	                            _react2.default.createElement(
+	                                'strong',
+	                                null,
+	                                'Red LED Status: '
+	                            ),
+	                            _react2.default.createElement('input', { type: 'checkbox', checkedLink: this.makeCheckedLink('redLEDStatus'), onClick: this.updateLEDStatus, 'data-color': 'red' })
+	                        )
+	                    ),
+	                    _react2.default.createElement(
+	                        'li',
+	                        null,
+	                        _react2.default.createElement(
+	                            'label',
+	                            { htmlFor: 'green-led-on' },
+	                            _react2.default.createElement(
+	                                'strong',
+	                                null,
+	                                'Green LED Status: '
+	                            ),
+	                            _react2.default.createElement('input', { type: 'checkbox', checkedLink: this.makeCheckedLink('greenLEDStatus'), onClick: this.updateLEDStatus, 'data-color': 'green' })
+	                        )
+	                    )
 	                )
 	            );
 	        }
 	    }]);
 
-	    return LEDStatus;
+	    return SwitchStatus;
 	}(_react2.default.Component);
 
-	exports.default = LEDStatus;
+	exports.default = SwitchStatus;
 
 /***/ }
 /******/ ]);
