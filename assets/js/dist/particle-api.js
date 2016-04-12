@@ -29704,6 +29704,9 @@
 
 	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(SwitchStatus).call(this));
 
+	        _this.frequency = 5000;
+	        _this.interval = 0;
+
 	        _this.state = {
 	            redLEDStatus: false,
 	            greenLEDStatus: false
@@ -29712,12 +29715,25 @@
 	        _this.makeCheckedLink = _this.makeCheckedLink.bind(_this);
 	        _this.updateLEDStatus = _this.updateLEDStatus.bind(_this);
 
+	        _this.startLoop();
+
 	        return _this;
 	    }
 
 	    _createClass(SwitchStatus, [{
-	        key: 'componentDidMount',
-	        value: function componentDidMount() {
+	        key: 'startLoop',
+	        value: function startLoop() {
+	            if (this.interval > 0) {
+	                clearInterval(this.interval);
+	            }
+	            this.interval = setInterval(this.checkAndUpdateLEDs, this.frequency);
+	        }
+	    }, {
+	        key: 'checkAndUpdateLEDs',
+	        value: function checkAndUpdateLEDs() {
+
+	            console.log('checking LEDs');
+
 	            this.serverRequest = $.get('http://particle-api.alecrippberger.com/wp-json/particle-api/v1/light', function (result) {
 
 	                this.setState({
@@ -29725,6 +29741,14 @@
 	                    greenLEDStatus: result[Object.keys(result)[1]].status == 'true'
 	                });
 	            }.bind(this));
+	        }
+	    }, {
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+
+	            console.log('component did mount');
+
+	            this.checkAndUpdateLEDs();
 	        }
 	    }, {
 	        key: 'componentWillUnmount',
@@ -29759,11 +29783,16 @@
 	                    "status": e.target.checked
 	                }),
 	                headers: {
-	                    //Authorization: 'Basic YWRtaW46cGFzc3dvcmQ='
+	                    //Authorization: 'Basic YWRtaW46cGFzc3dvcmQ=' //not real - local
 	                    Authorization: 'Basic YWxlYzpLNmZGIG1QcGsgSWVscyBQc1ph'
 	                },
 	                dataType: 'json',
 	                success: function success(data) {
+	                    console.log('success');
+	                    console.log(data);
+	                },
+	                complete: function complete(data) {
+	                    console.log('complete');
 	                    console.log(data);
 	                }
 	            });
