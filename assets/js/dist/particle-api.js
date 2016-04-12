@@ -29736,7 +29736,7 @@
 
 	            this.serverRequest = $.get('http://particle-api.alecrippberger.com/wp-json/particle-api/v1/light', function (result) {
 
-	                this.setState({
+	                this.state({
 	                    redLEDStatus: result[Object.keys(result)[0]].status == 'true',
 	                    greenLEDStatus: result[Object.keys(result)[1]].status == 'true'
 	                });
