@@ -56,10 +56,16 @@ export default class SwitchStatus extends React.Component {
                 "status": e.target.checked
             }),
             headers: {
-                Authorization: 'Basic YWRtaW46cGFzc3dvcmQ=' //not real - local
+                //Authorization: 'Basic YWRtaW46cGFzc3dvcmQ=' //not real - local
+                Authorization: 'Basic YWxlYzpLNmZGIG1QcGsgSWVscyBQc1ph'
             },
             dataType: 'json',
             success: function (data) {
+                console.log('success');
+                console.log(data);
+            }
+            complete: function (data) {
+                console.log('complete');
                 console.log(data);
             }
         });
