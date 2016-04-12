@@ -63,7 +63,7 @@ export default class SwitchStatus extends React.Component {
             success: function (data) {
                 console.log('success');
                 console.log(data);
-            }
+            },
             complete: function (data) {
                 console.log('complete');
                 console.log(data);
