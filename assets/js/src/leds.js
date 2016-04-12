@@ -70,7 +70,7 @@ export default class SwitchStatus extends React.Component {
             }),
             headers: {
                 //Authorization: 'Basic YWRtaW46cGFzc3dvcmQ=' //not real - local
-                Authorization: 'Basic YWxlYzpLNmZGIG1QcGsgSWVscyBQc1ph'
+                Authorization: 'Basic YWxlYzpLNmZGIG1QcGsgSWVscyBQc1ph' //accidentally published - now revoked :-)
             },
             dataType: 'json',
             success: function (data) {
