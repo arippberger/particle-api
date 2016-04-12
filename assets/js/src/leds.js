@@ -6,6 +6,9 @@ export default class SwitchStatus extends React.Component {
     constructor() {
         super();
 
+        this.frequency = 5000;
+        this.interval  = 0;
+
         this.state = {
             redLEDStatus: false,
             greenLEDStatus: false
@@ -14,9 +17,21 @@ export default class SwitchStatus extends React.Component {
         this.makeCheckedLink = this.makeCheckedLink.bind(this);
         this.updateLEDStatus = this.updateLEDStatus.bind(this);
 
+        this.startLoop();
+
     }
 
-    componentDidMount() {
+    startLoop() {
+        if(this.interval > 0) {
+            clearInterval(this.interval);
+        }
+        this.interval = setInterval( this.checkAndUpdateLEDs, this.frequency );
+    }
+
+    checkAndUpdateLEDs() {
+
+        console.log('checking LEDs');
+
         this.serverRequest = $.get('http://particle-api.alecrippberger.com/wp-json/particle-api/v1/light', function (result) {
 
             this.setState({
@@ -25,6 +40,13 @@ export default class SwitchStatus extends React.Component {
             });
 
         }.bind(this));
+    }
+
+    componentDidMount() {
+
+        console.log('component did mount');
+
+        this.checkAndUpdateLEDs();
     }
 
     componentWillUnmount() {
