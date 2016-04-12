@@ -29748,15 +29748,25 @@
 	        key: 'updateLEDStatus',
 	        value: function updateLEDStatus(e) {
 	            var color = e.target.dataset.color;
-	            this.serverRequest = $.post('http://particle-api.alecrippberger.com/wp-json/particle-api/v1/light/' + color, function (result) {
 
-	                console.log(result);
+	            //console.log(this.state[ color + 'LEDStatus']);
 
-	                this.setState({
-	                    redLEDStatus: result[Object.keys(result)[0]].status == 'true',
-	                    greenLEDStatus: result[Object.keys(result)[1]].status == 'true'
-	                });
-	            }.bind(this));
+	            $.ajax({
+	                url: 'http://particle-api.alecrippberger.com/wp-json/particle-api/v1/light/' + color,
+	                //url: 'http://wpapi.dev/wp-json/particle-api/v1/light/' + color,
+	                type: 'post',
+	                data: JSON.stringify({
+	                    "status": e.target.checked
+	                }),
+	                headers: {
+	                    //Authorization: 'Basic YWRtaW46cGFzc3dvcmQ='
+	                    Authorization: 'Basic YWxlYzpLNmZGIG1QcGsgSWVscyBQc1ph'
+	                },
+	                dataType: 'json',
+	                success: function success(data) {
+	                    console.log(data);
+	                }
+	            });
 	        }
 	    }, {
 	        key: 'render',
@@ -29784,7 +29794,8 @@
 	                                null,
 	                                'Red LED Status: '
 	                            ),
-	                            _react2.default.createElement('input', { type: 'checkbox', checkedLink: this.makeCheckedLink('redLEDStatus'), onClick: this.updateLEDStatus, 'data-color': 'red' })
+	                            _react2.default.createElement('input', { type: 'checkbox', checkedLink: this.makeCheckedLink('redLEDStatus'),
+	                                onClick: this.updateLEDStatus, 'data-color': 'red' })
 	                        )
 	                    ),
 	                    _react2.default.createElement(
@@ -29798,7 +29809,8 @@
 	                                null,
 	                                'Green LED Status: '
 	                            ),
-	                            _react2.default.createElement('input', { type: 'checkbox', checkedLink: this.makeCheckedLink('greenLEDStatus'), onClick: this.updateLEDStatus, 'data-color': 'green' })
+	                            _react2.default.createElement('input', { type: 'checkbox', checkedLink: this.makeCheckedLink('greenLEDStatus'),
+	                                onClick: this.updateLEDStatus, 'data-color': 'green' })
 	                        )
 	                    )
 	                )

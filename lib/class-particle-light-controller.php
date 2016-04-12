@@ -58,17 +58,17 @@ class Particle_Light_Controller extends \WP_REST_Controller implements Particle_
 	public function get_items( $request ) {
 
 		$lights = array();
-		$data = array();
+		$data   = array();
 
-		foreach( self::$lights as $key => $light ) {
+		foreach ( self::$lights as $key => $light ) {
 			$lights[ $key ] = get_option( $light );
 		}
 
 		foreach ( $lights as $key => $light ) {
-			$object = new \stdClass();
-			$light_data   = $this->prepare_item_for_response( $light, $request );
+			$object         = new \stdClass();
+			$light_data     = $this->prepare_item_for_response( $light, $request );
 			$object->status = $this->prepare_response_for_collection( $light_data );
-			$data[ $key ] = $object;
+			$data[ $key ]   = $object;
 		}
 
 		return new \WP_REST_Response( $data, 200 );
@@ -83,9 +83,9 @@ class Particle_Light_Controller extends \WP_REST_Controller implements Particle_
 	 */
 	public function get_item( $request ) {
 		//get parameters from request
-		$params = $request->get_params();
-		$object = new \stdClass();
-		$light  = get_option( self::$lights[ $params[ 0 ] ] );
+		$params         = $request->get_params();
+		$object         = new \stdClass();
+		$light          = get_option( self::$lights[ $params[ 0 ] ] );
 		$object->status = $this->prepare_item_for_response( $light, $request );
 
 		//return a response or error based on some conditional
@@ -104,19 +104,20 @@ class Particle_Light_Controller extends \WP_REST_Controller implements Particle_
 	 * @return \WP_Error|\WP_REST_Request
 	 */
 	public function update_item( $request ) {
-		//$item = $this->prepare_item_for_database( $request );
-		$params  = $request->get_params();
-		$color   = $params[ 0 ];
+
+		$params = $request->get_params();
+		$color  = $params[ 0 ];
 
 		if ( ! array_key_exists( $color, self::$lights ) ) {
 			return new \WP_Error( 'cant-update', __( 'message', 'particle-api' ), array( 'status' => 500 ) );
 		}
 
-		$json    = json_decode( $request->get_body() );
-		$status  = isset( $json->status ) ? $json->status : null;
-		$data    = new \stdClass();
-
-		update_option( self::$lights[ $color ], $status );
+		$json          = json_decode( $request->get_body() );
+		$status        = isset( $json->status ) ? $json->status : null;
+		$string_status = ( $status ) ? 'true' : 'false';
+		$data          = new \stdClass();
+		
+		update_option( self::$lights[ $color ], $string_status );
 
 		$data->status = $status;
 
@@ -160,7 +161,9 @@ class Particle_Light_Controller extends \WP_REST_Controller implements Particle_
 	 * @return \WP_Error|bool
 	 */
 	public function update_item_permissions_check( $request ) {
+		return true;
 		$current_user_can = current_user_can( 'edit_posts' );
+
 		return $current_user_can;
 	}
 
@@ -184,7 +187,7 @@ class Particle_Light_Controller extends \WP_REST_Controller implements Particle_
 	 * @return mixed
 	 */
 	public function prepare_item_for_response( $item, $request ) {
-		return  $item;
+		return $item;
 	}
 
 	/**

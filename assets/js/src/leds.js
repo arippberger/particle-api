@@ -45,16 +45,24 @@ export default class SwitchStatus extends React.Component {
 
     updateLEDStatus(e) {
         var color = e.target.dataset.color;
-        this.serverRequest = $.post('http://particle-api.alecrippberger.com/wp-json/particle-api/v1/light/' + color, function (result) {
 
-            console.log(result);
+        //console.log(this.state[ color + 'LEDStatus']);
 
-            this.setState({
-                redLEDStatus: (result[Object.keys(result)[0]].status == 'true'),
-                greenLEDStatus: (result[Object.keys(result)[1]].status == 'true')
-            });
-
-        }.bind(this));
+        $.ajax({
+            url: 'http://particle-api.alecrippberger.com/wp-json/particle-api/v1/light/' + color,
+            //url: 'http://wpapi.dev/wp-json/particle-api/v1/light/' + color,
+            type: 'post',
+            data: JSON.stringify({
+                "status": e.target.checked
+            }),
+            headers: {
+                Authorization: 'Basic YWRtaW46cGFzc3dvcmQ=' //not real - local
+            },
+            dataType: 'json',
+            success: function (data) {
+                console.log(data);
+            }
+        });
     }
 
     render() {
@@ -64,11 +72,13 @@ export default class SwitchStatus extends React.Component {
                 <h2>LED Status</h2>
                 <ul>
                     <li><label htmlFor="red-led-on"><strong>Red LED Status: </strong>
-                        <input type="checkbox" checkedLink={this.makeCheckedLink('redLEDStatus')} onClick={this.updateLEDStatus} data-color="red"/>
+                        <input type="checkbox" checkedLink={this.makeCheckedLink('redLEDStatus')}
+                               onClick={this.updateLEDStatus} data-color="red"/>
                     </label>
                     </li>
                     <li><label htmlFor="green-led-on"><strong>Green LED Status: </strong>
-                        <input type="checkbox" checkedLink={this.makeCheckedLink('greenLEDStatus')} onClick={this.updateLEDStatus} data-color="green"/>
+                        <input type="checkbox" checkedLink={this.makeCheckedLink('greenLEDStatus')}
+                               onClick={this.updateLEDStatus} data-color="green"/>
                     </label>
                     </li>
                 </ul>
