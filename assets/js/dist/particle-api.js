@@ -19728,10 +19728,12 @@
 	var SwitchStatus = function (_React$Component) {
 	    _inherits(SwitchStatus, _React$Component);
 
-	    function SwitchStatus(props) {
+	    function SwitchStatus() {
 	        _classCallCheck(this, SwitchStatus);
 
-	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(SwitchStatus).call(this, props));
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(SwitchStatus).call(this));
+
+	        _this.timerFrequency = 5000;
 
 	        _this.state = {
 	            switchOneStatus: '',
@@ -19744,14 +19746,27 @@
 	    _createClass(SwitchStatus, [{
 	        key: 'componentDidMount',
 	        value: function componentDidMount() {
-	            this.serverRequest = $.get('http://particle-api.alecrippberger.com/wp-json/particle-api/v1/switch', function (result) {
 
-	                this.setState({
-	                    switchOneStatus: result[Object.keys(result)[0]].status,
-	                    switchTwoStatus: result[Object.keys(result)[1]].status,
-	                    switchThreeStatus: result[Object.keys(result)[2]].status
-	                });
-	            }.bind(this));
+	            console.log('switch component did mount');
+
+	            this.checkAndUpdateSwitches();
+	        }
+	    }, {
+	        key: 'checkAndUpdateSwitches',
+	        value: function checkAndUpdateSwitches() {
+
+	            setInterval(function () {
+	                this.serverRequest = $.get('http://particle-api.alecrippberger.com/wp-json/particle-api/v1/switch', function (result) {
+
+	                    console.log(result);
+
+	                    this.setState({
+	                        switchOneStatus: result[Object.keys(result)[0]].status,
+	                        switchTwoStatus: result[Object.keys(result)[1]].status,
+	                        switchThreeStatus: result[Object.keys(result)[2]].status
+	                    });
+	                }.bind(this));
+	            }.bind(this), this.timerFrequency);
 	        }
 	    }, {
 	        key: 'componentWillUnmount',
@@ -29704,8 +29719,7 @@
 
 	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(SwitchStatus).call(this));
 
-	        _this.frequency = 5000;
-	        _this.interval = 0;
+	        _this.timerFrequency = 5000;
 
 	        _this.state = {
 	            redLEDStatus: false,
@@ -29715,48 +29729,31 @@
 	        _this.makeCheckedLink = _this.makeCheckedLink.bind(_this);
 	        _this.updateLEDStatus = _this.updateLEDStatus.bind(_this);
 
-	        _this.startLoop();
-
 	        return _this;
 	    }
 
 	    _createClass(SwitchStatus, [{
-	        key: 'startLoop',
-	        value: function startLoop() {
-	            if (this.interval > 0) {
-	                clearInterval(this.interval);
-	            }
-	            this.interval = setInterval(this.checkAndUpdateLEDs, this.frequency);
-	        }
-	    }, {
 	        key: 'checkAndUpdateLEDs',
 	        value: function checkAndUpdateLEDs() {
+	            setInterval(function () {
+	                this.serverRequest = $.get('http://particle-api.alecrippberger.com/wp-json/particle-api/v1/light', function (result) {
 
-	            console.log('checking LEDs');
+	                    console.log(result);
 
-	            var self = this;
-
-	            this.serverRequest = $.get('http://particle-api.alecrippberger.com/wp-json/particle-api/v1/light', function (result) {
-
-	                self.setState({
-	                    redLEDStatus: result[Object.keys(result)[0]].status == 'true',
-	                    greenLEDStatus: result[Object.keys(result)[1]].status == 'true'
-	                });
-	            }.bind(this));
+	                    this.setState({
+	                        redLEDStatus: result[Object.keys(result)[0]].status == 'true',
+	                        greenLEDStatus: result[Object.keys(result)[1]].status == 'true'
+	                    });
+	                }.bind(this));
+	            }.bind(this), this.timerFrequency);
 	        }
 	    }, {
 	        key: 'componentDidMount',
 	        value: function componentDidMount() {
 
-	            console.log('component did mount');
+	            console.log('LEDs component did mount');
 
-	            this.serverRequest = $.get('http://particle-api.alecrippberger.com/wp-json/particle-api/v1/light', function (result) {
-
-	                this.setState({
-	                    redLEDStatus: result[Object.keys(result)[0]].status == 'true',
-	                    greenLEDStatus: result[Object.keys(result)[1]].status == 'true'
-	                });
-	            }.bind(this));
+	            this.checkAndUpdateLEDs();
 	        }
 	    }, {
 	        key: 'componentWillUnmount',

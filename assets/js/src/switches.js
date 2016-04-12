@@ -3,8 +3,11 @@ var $ = require('jquery');
 
 export default class SwitchStatus extends React.Component{
 
-    constructor(props) {
-        super(props);
+    constructor() {
+        super();
+
+        this.timerFrequency = 5000;
+        
         this.state = {
             switchOneStatus: '',
             switchTwoStatus: '',
@@ -13,15 +16,31 @@ export default class SwitchStatus extends React.Component{
     }
 
     componentDidMount() {
-        this.serverRequest = $.get('http://particle-api.alecrippberger.com/wp-json/particle-api/v1/switch', function (result) {
 
-            this.setState({
-                switchOneStatus: result[Object.keys(result)[0]].status,
-                switchTwoStatus: result[Object.keys(result)[1]].status,
-                switchThreeStatus: result[Object.keys(result)[2]].status
-            });
+        console.log('switch component did mount');
 
-        }.bind(this));
+        this.checkAndUpdateSwitches();
+
+    }
+
+    checkAndUpdateSwitches() {
+
+        setInterval( function() {
+            this.serverRequest = $.get('http://particle-api.alecrippberger.com/wp-json/particle-api/v1/switch',
+
+                function (result) {
+
+                    console.log(result);
+
+                    this.setState({
+                        switchOneStatus: result[Object.keys(result)[0]].status,
+                        switchTwoStatus: result[Object.keys(result)[1]].status,
+                        switchThreeStatus: result[Object.keys(result)[2]].status
+                    });
+
+                }.bind(this)
+            )
+        }.bind(this), this.timerFrequency);
     }
 
     componentWillUnmount() {

@@ -6,8 +6,7 @@ export default class SwitchStatus extends React.Component {
     constructor() {
         super();
 
-        this.frequency = 5000;
-        this.interval  = 0;
+        this.timerFrequency = 5000;
 
         this.state = {
             redLEDStatus: false,
@@ -17,45 +16,28 @@ export default class SwitchStatus extends React.Component {
         this.makeCheckedLink = this.makeCheckedLink.bind(this);
         this.updateLEDStatus = this.updateLEDStatus.bind(this);
 
-        this.startLoop();
-
-    }
-
-    startLoop() {
-        if(this.interval > 0) {
-            clearInterval(this.interval);
-        }
-        this.interval = setInterval( this.checkAndUpdateLEDs, this.frequency );
     }
 
     checkAndUpdateLEDs() {
+        setInterval( function() {
+            this.serverRequest = $.get('http://particle-api.alecrippberger.com/wp-json/particle-api/v1/light', function (result) {
 
-        console.log('checking LEDs');
+                console.log(result);
 
-        var self = this;
+                this.setState({
+                    redLEDStatus: (result[Object.keys(result)[0]].status == 'true'),
+                    greenLEDStatus: (result[Object.keys(result)[1]].status == 'true')
+                });
 
-        this.serverRequest = $.get('http://particle-api.alecrippberger.com/wp-json/particle-api/v1/light', function (result) {
-
-            self.setState({
-                redLEDStatus: (result[Object.keys(result)[0]].status == 'true'),
-                greenLEDStatus: (result[Object.keys(result)[1]].status == 'true')
-            });
-
-        }.bind(this));
+            }.bind(this))}.bind(this), this.timerFrequency);
     }
 
     componentDidMount() {
 
-        console.log('component did mount');
+        console.log('LEDs component did mount');
 
-        this.serverRequest = $.get('http://particle-api.alecrippberger.com/wp-json/particle-api/v1/light', function (result) {
+        this.checkAndUpdateLEDs();
 
-            this.setState({
-                redLEDStatus: (result[Object.keys(result)[0]].status == 'true'),
-                greenLEDStatus: (result[Object.keys(result)[1]].status == 'true')
-            });
-
-        }.bind(this));
     }
 
     componentWillUnmount() {
