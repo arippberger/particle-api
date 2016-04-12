@@ -32,9 +32,11 @@ export default class SwitchStatus extends React.Component {
 
         console.log('checking LEDs');
 
+        var self = this;
+
         this.serverRequest = $.get('http://particle-api.alecrippberger.com/wp-json/particle-api/v1/light', function (result) {
 
-            this.state({
+            self.setState({
                 redLEDStatus: (result[Object.keys(result)[0]].status == 'true'),
                 greenLEDStatus: (result[Object.keys(result)[1]].status == 'true')
             });
@@ -46,7 +48,14 @@ export default class SwitchStatus extends React.Component {
 
         console.log('component did mount');
 
-        this.checkAndUpdateLEDs();
+        this.serverRequest = $.get('http://particle-api.alecrippberger.com/wp-json/particle-api/v1/light', function (result) {
+
+            this.setState({
+                redLEDStatus: (result[Object.keys(result)[0]].status == 'true'),
+                greenLEDStatus: (result[Object.keys(result)[1]].status == 'true')
+            });
+
+        }.bind(this));
     }
 
     componentWillUnmount() {
