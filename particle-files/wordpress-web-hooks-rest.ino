@@ -24,7 +24,7 @@ HttpClient http;
 // Headers currently need to be set at init, useful for API keys etc.
 http_header_t headers[] = {
     { "Content-Type", "application/json" },
-    { "Authorization", "Basic sorryicantputthishere" },
+    { "Authorization", "Basic YWxlYzpjNUZPIHQyaEMgWU1tbiBtZk9V" },
     //  { "Accept" , "application/json" },
     { "Accept" , "*/*" },
     { NULL, NULL } // NOTE: Always terminate headers will NULL
@@ -51,24 +51,24 @@ void setup() {
     digitalWrite(ledOne, LOW);
     digitalWrite(ledTwo, LOW);
 
-    ledOneRequest.hostname       = "alecrippberger.com";
-    ledOneRequest.path           = "/particle-api/wp-json/particle-api/v1/light/green";
+    ledOneRequest.hostname       = "particle-api.alecrippberger.com";
+    ledOneRequest.path           = "/wp-json/particle-api/v1/light/green";
     ledOneRequest.port           = 80;
 
-    ledTwoRequest.hostname       = "alecrippberger.com";
-    ledTwoRequest.path           = "/particle-api/wp-json/particle-api/v1/light/red";
+    ledTwoRequest.hostname       = "particle-api.alecrippberger.com";
+    ledTwoRequest.path           = "/wp-json/particle-api/v1/light/red";
     ledTwoRequest.port           = 80;
 
-    switchOneRequest.hostname    = "alecrippberger.com";
-    switchOneRequest.path        = "/particle-api/wp-json/particle-api/v1/switch/1";
+    switchOneRequest.hostname    = "particle-api.alecrippberger.com";
+    switchOneRequest.path        = "/wp-json/particle-api/v1/switch/1";
     switchOneRequest.port        = 80;
 
-    switchTwoRequest.hostname    = "alecrippberger.com";
-    switchTwoRequest.path        = "/particle-api/wp-json/particle-api/v1/switch/2";
+    switchTwoRequest.hostname    = "particle-api.alecrippberger.com";
+    switchTwoRequest.path        = "/wp-json/particle-api/v1/switch/2";
     switchTwoRequest.port        = 80;
 
-    switchThreeRequest.hostname  = "alecrippberger.com";
-    switchThreeRequest.path      = "/particle-api/wp-json/particle-api/v1/switch/3";
+    switchThreeRequest.hostname  = "particle-api.alecrippberger.com";
+    switchThreeRequest.path      = "/wp-json/particle-api/v1/switch/3";
     switchThreeRequest.port      = 80;
 
 }
@@ -87,26 +87,26 @@ void loop() {
         return;
     }
 
-    nextTime = millis() + 10000;
+    nextTime = millis() + 5000;
 
     Serial.println("10 seconds passed.");
 
     // Get LED one status and update
     http.get(ledOneRequest, response, headers);
     ledUpdated(ledOne, response.body);
-    delay(100);
+    delay(50);
 
     // Get LED one status and update
     http.get(ledTwoRequest, response, headers);
     ledUpdated(ledTwo, response.body);
-    delay(100);
+    delay(50);
 
     makeRequest("put", "switch/1", statusToString(digitalRead(switchOne)), "Switch One");
-    delay(100);
+    delay(50);
     makeRequest("put", "switch/2", statusToString(digitalRead(switchTwo)), "Switch Two");
-    delay(100);
+    delay(50);
     makeRequest("put", "switch/3", statusToString(digitalRead(switchThree)), "Switch Three");
-    delay(100);
+    delay(50);
 
 
     lastPublish = now;
@@ -116,8 +116,8 @@ void makeRequest(String verb, String path, String body, String name) {
 
     http_request_t request;
 
-    request.hostname             = "alecrippberger.com";
-    request.path                 = "/particle-api/wp-json/particle-api/v1/" + String(path);
+    request.hostname             = "particle-api.alecrippberger.com";
+    request.path                 = "/wp-json/particle-api/v1/" + String(path);
     request.port                 = 80;
     request.body                 = String(body);
 
