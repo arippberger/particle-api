@@ -31,10 +31,6 @@ export default class SwitchStatus extends React.Component{
                 function (result) {
 
                     console.log(result);
-                    console.log(result[Object.keys(result)[0]].status);
-                    console.log(result[Object.keys(result)[1]].status);
-                    console.log(result[Object.keys(result)[2]].status);
-
 
                     this.setState({
                         switchOneStatus: result[Object.keys(result)[0]].status,
