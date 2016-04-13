@@ -9,9 +9,9 @@ export default class SwitchStatus extends React.Component{
         this.timerFrequency = 5000;
         
         this.state = {
-            switchOneStatus: 'false',
-            switchTwoStatus: 'false',
-            switchThreeStatus: 'false'
+            switchOneStatus: '',
+            switchTwoStatus: '',
+            switchThreeStatus: ''
         }
     }
 
