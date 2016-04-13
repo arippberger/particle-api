@@ -19736,9 +19736,9 @@
 	        _this.timerFrequency = 5000;
 
 	        _this.state = {
-	            switchOneStatus: '',
-	            switchTwoStatus: '',
-	            switchThreeStatus: ''
+	            switchOneStatus: 'false',
+	            switchTwoStatus: 'false',
+	            switchThreeStatus: 'false'
 	        };
 	        return _this;
 	    }
@@ -19759,6 +19759,9 @@
 	                this.serverRequest = $.get('http://particle-api.alecrippberger.com/wp-json/particle-api/v1/switch', function (result) {
 
 	                    console.log(result);
+	                    console.log(result[Object.keys(result)[0]].status);
+	                    console.log(result[Object.keys(result)[1]].status);
+	                    console.log(result[Object.keys(result)[2]].status);
 
 	                    this.setState({
 	                        switchOneStatus: result[Object.keys(result)[0]].status,
@@ -29790,6 +29793,7 @@
 	                headers: {
 	                    //Authorization: 'Basic YWRtaW46cGFzc3dvcmQ=' //not real - local
 	                    //Authorization: 'Basic YWxlYzpLNmZGIG1QcGsgSWVscyBQc1ph' //accidentally published - now revoked :-)
+	                    Authorization: 'Basic ce89e5263edefbaf67ec44e1eb83b5e1'
 	                },
 	                dataType: 'json',
 	                success: function success(data) {
