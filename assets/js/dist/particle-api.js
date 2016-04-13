@@ -29790,7 +29790,6 @@
 	                headers: {
 	                    //Authorization: 'Basic YWRtaW46cGFzc3dvcmQ=' //not real - local
 	                    //Authorization: 'Basic YWxlYzpLNmZGIG1QcGsgSWVscyBQc1ph' //accidentally published - now revoked :-)
-	                    Authorization: 'Basic ce89e5263edefbaf67ec44e1eb83b5e1'
 	                },
 	                dataType: 'json',
 	                success: function success(data) {
