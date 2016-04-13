@@ -1,16 +1,16 @@
-=== Particle API ===
-Contributors: arippberger
-Donate link: http://alecrippberger.com/
-Tags: internet of things
-Requires at least: 4.4
-Tested up to: 4.5
-Stable tag: 4.5
-License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+# Particle API
+- Contributors: arippberger
+- Donate link: http://alecrippberger.com/
+- Tags: internet of things
+- Requires at least: 4.4
+- Tested up to: 4.5
+- Stable tag: 4.5
+- License: GPLv2 or later
+- License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 This is an example plugin to demonstrate how to integrate a Particle Photon/Electron/Core with the WordPress API.
 
-== Description ==
+## Description
 
 The "Internet of Things" (IoT) is the emergence of a number of devices that provide utility to the physical world via
 the web (or vice versa - providing utility to the web through physical devices).
@@ -21,7 +21,7 @@ electrical inputs/outputs with WiFi and multiprocessing chips. With the right kn
 to start preheating your oven from your phone; it could allow you to keep track of the water content of your garden soil
 from a website; it could allow you to build a toy to play with your cat from the web.
 
-== What You'll Want for this Demo ==
+## What You'll Want for this Demo
 
 In order to fully take advantage of this demo you'll want the following things:
 
@@ -30,7 +30,7 @@ In order to fully take advantage of this demo you'll want the following things:
 *   A WordPress website running 4.4 or higher (with several plugins installed -- including this one)
 *   Access to the Internet
 
-== Setup ==
+## Setup
 
 Here is a list of steps you should take to get the demo set up.
 
@@ -44,17 +44,17 @@ and this ('Particle API')
 using this command: echo -n "USERNAME:PASSWORD" | base64
 1. Add this info to the proper project files - you can search 'Authorization'
 
-== Frequently Asked Questions ==
+## Frequently Asked Questions
 
-= Gee, I have a question =
+### Gee, I have a question
 
-Yes! You with your hand up!
+- Yes! You with your hand up!
 
-== Screenshots ==
+## Screenshots
 
 Someday.
 
-== Changelog ==
+## Changelog
 
-= 1.0 =
+- 1.0
 
