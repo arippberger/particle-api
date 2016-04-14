@@ -161,7 +161,6 @@ class Particle_Light_Controller extends \WP_REST_Controller implements Particle_
 	 * @return \WP_Error|bool
 	 */
 	public function update_item_permissions_check( $request ) {
-		return true;
 		$current_user_can = current_user_can( 'edit_posts' );
 
 		return $current_user_can;
