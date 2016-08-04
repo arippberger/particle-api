@@ -36,7 +36,7 @@ Here is a list of steps you should take to get the demo set up.
 
 1. Assuming you have a Particle device - register it. Once registered and on a WiFi network,
 flash it with the code located in the particle-files folder
-1. You'll want to set up your Particle device as according to the code flashed (see schematic @todo - add schematic)
+1. You'll want to set up your Particle device as according to the code flashed (see schematic.jpg and breadboard.jpg)
 1. Setup your WP site: requires 4.4 or higher. Install these plugins: 'Application Passwords', 'WP REST API',
 and this ('Particle API')
 1. Assign an application password to a user (Dashboard -> Users -> Edit) and copy it
